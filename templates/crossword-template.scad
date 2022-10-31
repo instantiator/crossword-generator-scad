@@ -7,9 +7,9 @@ show_cells = selection == 0 || selection == 2;
 show_marks = selection == 0 || selection == 3;
 
 // design
-data = single_cell_test ? [[0,1,2]] : [[0,0,0,0,2,0,0,0,0,0,0], [0,0,2,1,1,1,1,1,1,1,0], [0,0,0,0,1,0,0,0,0,0,0], [0,0,0,1,1,1,1,2,1,1,1], [0,0,0,0,1,0,1,0,0,0,0], [0,0,0,0,1,0,1,0,0,0,0], [0,1,1,1,1,2,1,1,0,0,0], [0,0,0,0,0,0,1,0,0,0,0], [1,2,1,1,1,1,1,0,0,0,0]];
-characters_wide = single_cell_test ? 3 : 11;
-characters_deep = single_cell_test ? 1 : 9;
+data = single_cell_test ? [[0,1,2]] : {{DESIGN}};
+characters_wide = single_cell_test ? 3 : {{DESIGN_WIDTH}};
+characters_deep = single_cell_test ? 1 : {{DESIGN_HEIGHT}};
 
 tile_width=17.8;
 tile_depth=19.8;
