@@ -6,7 +6,8 @@ set -o pipefail
 usage() {
   cat << EOF
 Options:
-    -i         --input-csv            CSV representing the crossword.
+    -i <path>  --input-csv  <path>    CSV representing the crossword.
+    -v <path>  --input-vars <path>    Input variables CSV.
     -p <name>  --project-name <name>  Name the project - helps with tracing file names etc.
     -h         --help                 Prints this help message and exits
 EOF
@@ -22,6 +23,10 @@ while [ -n "$1" ]; do
   -i | --input-csv)
       shift
       INPUT_CSV=$1
+      ;;
+  -v | --input-vars)
+      shift
+      INPUT_VARS=$1
       ;;
   -p | --project-name)
       shift
@@ -53,19 +58,30 @@ if [ ! -f "$INPUT_CSV" ]; then
   exit 1
 fi
 
+if [ -z "$INPUT_VARS" ]; then
+  echo "Please provide the variables CSV with the --input-vars parameter."
+  exit 1
+fi
+if [ ! -f "$INPUT_VARS" ]; then
+  echo "CSV file not found: $INPUT_CSV"
+  exit 1
+fi
+
 echo "Building project: ${PROJECT_NAME}"
 echo
 
 scripts/init-directories.sh
 rm -rf working/*
 
-# generate SCAD
+# init some paths
 INPUT_TEMPLATE_PATH=templates/crossword-template.scad
 WORKING_SCAD_PATH=working/${PROJECT_NAME}.scad
+
+# generate SCAD
 scripts/generate-scad.sh \
   --input-csv $INPUT_CSV \
   --input-template $INPUT_TEMPLATE_PATH \
-  --mode $MODE \
+  --input-vars $INPUT_VARS \
   --output-scad $WORKING_SCAD_PATH
 
 # generate STL

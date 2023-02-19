@@ -1,6 +1,5 @@
-
-selection = {{MODE}}; // 0 = all, 1 = base, 2 = cells, 3 = marks
-single_cell_test = false; // if true, just display a single cell with all the trimmings
+selection = {{MODE}};
+single_cell_test = {{SINGLE_CELL_TEST}};
 
 show_base  = selection == 0 || selection == 1;
 show_cells = selection == 0 || selection == 2;
@@ -11,11 +10,11 @@ data = single_cell_test ? [[0,1,2]] : {{DESIGN}};
 characters_wide = single_cell_test ? 3 : {{DESIGN_WIDTH}};
 characters_deep = single_cell_test ? 1 : {{DESIGN_HEIGHT}};
 
-tile_width=17.8;
-tile_depth=19.8;
+tile_width={{TILE_WIDTH}};
+tile_depth={{TILE_DEPTH}};
 
-base_height=2;
-cell_height=3.5; // 2.5 wood, +1 for the thingy
+base_height={{BASE_HEIGHT}};
+cell_height={{CELL_HEIGHT}};
 mark_height = 1;
 
 echo(str("Base: 0.0 - ", base_height));
@@ -24,13 +23,12 @@ echo(str("Mark: ", base_height + cell_height, " - ", base_height + cell_height +
 
 cell_margin=0.5;
 cell_border=1;
-
 base_padding=2;
 
 base_width = (base_padding*2) + ((cell_border + (cell_margin*2) + tile_width) * characters_wide) + cell_border;
 base_depth = (base_padding*2) + ((cell_border + (cell_margin*2) + tile_depth) * characters_deep) + cell_border;
 
-echo("Max dimensions: 231 x 236");
+echo("Recommended max: {{MAX_WIDTH}} x {{MAX_HEIGHT}}");
 echo(str("Width: ", base_width));
 echo(str("Depth: ", base_depth));
 

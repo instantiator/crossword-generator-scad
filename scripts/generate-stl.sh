@@ -58,3 +58,4 @@ echo "Output file: $OUTPUT_FILE"
 echo
 
 docker run -v $(pwd):/openscad openscad/openscad openscad $INPUT_SCAD -o $OUTPUT_FILE
+echo

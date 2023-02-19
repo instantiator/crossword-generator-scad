@@ -11,6 +11,7 @@ var KEY_MODE="{{MODE}}";
 string inputCsvPath = null;
 string inputTemplatePath = null;
 string outputScadPath = null;
+string inputVarsPath = null;
 string mode = "0";
 
 for (int i = 0; i < args.Length; i++)
@@ -23,8 +24,8 @@ for (int i = 0; i < args.Length; i++)
         case "--input-template":
             inputTemplatePath = args[i+1];
             break;
-        case "--mode":
-            mode = args[i+1];
+        case "--input-vars":
+            inputVarsPath = args[i+1];
             break;
         case "--output-scad":
             outputScadPath = args[i+1];
@@ -33,13 +34,15 @@ for (int i = 0; i < args.Length; i++)
 }
 
 // exit if files aren't available
-if (!File.Exists(inputCsvPath)) { Console.WriteLine($"[ERROR] Path not found: {inputCsvPath}"); Environment.Exit(1); }
-if (!File.Exists(inputTemplatePath)) { Console.WriteLine($"[ERROR] Path not found: {inputTemplatePath}"); Environment.Exit(1); }
+if (!File.Exists(inputCsvPath)) { Console.WriteLine($"[ERROR] Crossword CSV path not found: {inputCsvPath}"); Environment.Exit(1); }
+if (!File.Exists(inputTemplatePath)) { Console.WriteLine($"[ERROR] Template path not found: {inputTemplatePath}"); Environment.Exit(1); }
+if (!File.Exists(inputVarsPath)) { Console.WriteLine($"[ERROR] Variables path not found: {inputVarsPath}"); Environment.Exit(1); }
 if (outputScadPath == null) { Console.WriteLine($"[ERROR] Output path not defined."); Environment.Exit(1); }
 
-// read template and CSV
+// read template, CSV, and variable substitutions
 var template = File.ReadAllText(inputTemplatePath);
 var csv = File.ReadAllLines(inputCsvPath).Select(r => r.Split(',').Select(c => c.Trim('"').Trim()));
+var variableSubstitutions = File.ReadAllLines(inputVarsPath).Select(r => r.Split(',').Select(c => c.Trim('"').Trim()));
 
 // errors in CSV
 if (csv.Any(r => r.Any(cell => cell.Length > 1))) { Console.WriteLine($"[ERROR] Found a cell that contains more than 1 character."); Environment.Exit(1); }
@@ -66,11 +69,16 @@ Console.WriteLine();
 // substitutions for the template
 var substitutions = new Dictionary<string, string>()
 {
-    { KEY_MODE, mode },
     { KEY_DESIGN, design },
     { KEY_DESIGN_WIDTH, csv.Max(row => row.Count()).ToString() },
     { KEY_DESIGN_HEIGHT, csv.Count().ToString() }
 };
+
+// append the variable substitutions from their file
+foreach (var row in variableSubstitutions)
+{
+    substitutions.Add("{{"+row.ElementAt(0)+"}}", row.ElementAt(1));
+}
 
 Console.WriteLine("Generating SCAD from template...");
 var scad = new string(template);
