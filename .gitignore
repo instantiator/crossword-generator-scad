@@ -1,9 +1,12 @@
 .vscode
 .DS_Store
 
+.vs/
 bin/
 debug/
 obj/
 
 working/
 results/
+inputs/
+

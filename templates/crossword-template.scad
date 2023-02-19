@@ -1,5 +1,5 @@
 
-selection = 0; // 0 = all, 1 = base, 2 = cells, 3 = marks
+selection = {{MODE}}; // 0 = all, 1 = base, 2 = cells, 3 = marks
 single_cell_test = false; // if true, just display a single cell with all the trimmings
 
 show_base  = selection == 0 || selection == 1;
@@ -17,6 +17,7 @@ tile_depth=19.8;
 base_height=2;
 cell_height=3.5; // 2.5 wood, +1 for the thingy
 mark_height = 1;
+
 echo(str("Base: 0.0 - ", base_height));
 echo(str("Cell: ", base_height, " - ", base_height + cell_height));
 echo(str("Mark: ", base_height + cell_height, " - ", base_height + cell_height + mark_height));

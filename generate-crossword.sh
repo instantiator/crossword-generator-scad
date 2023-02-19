@@ -7,11 +7,14 @@ usage() {
   cat << EOF
 Options:
     -i         --input-csv            CSV representing the crossword.
+    -p <name>  --project-name <name>  Name the project - helps with tracing file names etc.
     -h         --help                 Prints this help message and exits
 EOF
 }
 
 # defaults
+PROJECT_NAME=working-design
+MODE=0
 
 # parameters
 while [ -n "$1" ]; do
@@ -19,6 +22,14 @@ while [ -n "$1" ]; do
   -i | --input-csv)
       shift
       INPUT_CSV=$1
+      ;;
+  -p | --project-name)
+      shift
+      PROJECT_NAME=$1
+      ;;
+  -m | --mode)
+      shift
+      MODE=$1
       ;;
   -h | --help)
     usage
@@ -42,15 +53,19 @@ if [ ! -f "$INPUT_CSV" ]; then
   exit 1
 fi
 
+echo "Building project: ${PROJECT_NAME}"
+echo
+
 scripts/init-directories.sh
 rm -rf working/*
 
 # generate SCAD
 INPUT_TEMPLATE_PATH=templates/crossword-template.scad
-WORKING_SCAD_PATH=working/crossword-working.scad
+WORKING_SCAD_PATH=working/${PROJECT_NAME}.scad
 scripts/generate-scad.sh \
   --input-csv $INPUT_CSV \
   --input-template $INPUT_TEMPLATE_PATH \
+  --mode $MODE \
   --output-scad $WORKING_SCAD_PATH
 
 # generate STL

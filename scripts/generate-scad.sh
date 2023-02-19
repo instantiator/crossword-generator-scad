@@ -9,11 +9,13 @@ Options:
     -i         --input-csv            Input CSV file
     -t         --input-template       Input SCAD template
     -o         --output-scad          Output SCAD file
+    -m         --mode                 Mode for the template
     -h         --help                 Prints this help message and exits
 EOF
 }
 
 # defaults
+MODE=0
 
 # parameters
 while [ -n "$1" ]; do
@@ -29,6 +31,10 @@ while [ -n "$1" ]; do
   -o | --output-scad)
       shift
       OUTPUT_SCAD=$1
+      ;;
+  -m | --mode)
+      shift
+      MODE=$1
       ;;
   -h | --help)
     usage
@@ -71,7 +77,9 @@ echo "Generating SCAD file from CSV..."
 echo "Input CSV:   $INPUT_CSV"
 echo "Working CSV: $WORKING_CSV_PATH"
 echo "Template:    $INPUT_TEMPLATE"
+echo "Mode:        $MODE"
 echo "SCAD file:   $OUTPUT_SCAD"
+echo
 
 cp $INPUT_CSV $WORKING_CSV_PATH
 
@@ -82,6 +90,7 @@ docker run -it \
   scad-generator \
   --input-csv /$WORKING_CSV_PATH \
   --input-template /$INPUT_TEMPLATE \
+  --mode $MODE \
   --output-scad /$OUTPUT_SCAD
 
 # generate SCAD
