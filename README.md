@@ -33,9 +33,13 @@ When running, this tool does the following:
   * Inputs: `templates/crossword-template.scad` and the `--input-csv` file
   * Output: `working/crossword-working.scad`
 3. Uses the [openscad/openscad](https://hub.docker.com/r/openscad/openscad) Docker image to generate the final STL.
-4. In mode 0, also inserts colour change points with MT600 instructions.
 
 ## Inputs
+
+Inputs to this tool are CSV-with-caveats. It's not a real CSV reader, so:
+
+* Don't put commas in your strings.
+* Don't nest inverted commas.
 
 ### Crossword CSV
 
@@ -45,7 +49,7 @@ You can use a CSV of any side. A grid of up to 11 x 9 characters will fit on a S
 * Edit in your characters. Use lower case for regular letter spaces, and upper case for highlighted spaces.
 * Export as CSV.
 
-### Variable substitutions
+### Variable substitutions CSV
 
 To alter variables that control the template, provide an alternative CSV file with the `-v` option. You can copy `templates/crossword-defaults.csv` to do this. It is a CSV file with no heading and 3 columns:
 
