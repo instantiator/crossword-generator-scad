@@ -8,7 +8,6 @@ _Work in progress..._
 - [x] Modify the size of the output based on the size of the crossword provided.
 - [x] Allow selection of mode.
 - [x] Allow the cells to be modified in size, too.
-- [ ] Print numbers into cells.
 
 ## Prerequisites
 
