@@ -65,11 +65,51 @@ When printing a crossword, there are 3 distinct sections:
 * The cells
 * The highlights
 
-To change filament between layers for a multicoloured effect, you'll need to:
+To print these in different colours, you'll either need a multi-filament print head, or you'll need to change filament during the print. I'm afraid I don't know much about multi-filament printing.
+
+To change filament during the print, you'll need to incorporate that instruction into the gcode that's sent to the printer. You may be able to do this automatically in your slicer. If not, as with Snapmaker Luban, then you'll need to do it manually by inserting an `M600` command in the right place.
+
+### `M600` (change filament)
+
+To change filament between layers for a multicoloured effect, you'll need an `M600` command.
 
 * Identify the topmost printed layer of each section
-* Export the GCode from your favourite slicer
+* Export the gcode from your favourite slicer
 * Insert an `M600` command at the end of the last layer of each section
 * Print from your newly modified GCode directly
 
-See: [Add command M600 in your GCode file](https://forum.snapmaker.com/t/add-command-m600-in-your-g-code-file/18242)
+See:
+
+* [Add command M600 in your GCode file](https://forum.snapmaker.com/t/add-command-m600-in-your-g-code-file/18242)
+* [M600 Snapmaker gcode reference](https://snapmaker.github.io/Documentation/gcode/M600)
+
+#### Identifying the layers (Luban)
+
+When you've generated gcode, Luban offers an adjustable bar on the right, just by the 'line type' colour key, that shows all the layers.
+
+You can pull it down from the top to hide layers and as you do so it shows an indicator with the number of the topmost layer that's visible. You can use it to see where each section of the print begins and ends, as here:
+
+| Base | Cells | Highlights |
+|-|-|-|
+| ![](documentation/images/luban-base-0-to-11.png) | ![](documentation/images/luban-grid-0-to-23.png) | ![](documentation/images/luban-all-0-to-30.png) |
+| Layers 0-11 | Layers 12-23 | Layers 24-30 |
+
+Therefore to change filament between each section, you'd introduce an `M600` at the end of layer 11, and at the end of layer 23.
+
+#### Example gcode
+
+In this example, we introduce an `M600` command right before layer 24 in the gcode file. `...` indicates gcode commands before and after the area we're interested in:
+
+```gcode
+...
+M600
+;TIME_ELAPSED:2507.478646
+;LAYER:24
+...
+```
+
+As you can see, the layer beginnings are numbered quite clearly, and begin with the prefix: `;LAYER:` - this makes it easy to search through large gcode files for the right place to insert your `M600`.
+
+#### Printing your altered gcode
+
+Now that you've modified the gcode, you'll need to send it to your printer. Snapmakers will need you to _send_ the file to the printer, and then print it from there using the control panel, rather than initiate a print from Luban.
